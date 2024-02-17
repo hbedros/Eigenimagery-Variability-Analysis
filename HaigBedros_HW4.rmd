@@ -102,16 +102,16 @@ for (i in 1:min(length(files), dim(mypca2)[1])) {
 
 ### Discussion
 
-This analysis demonstrates a comprehensive approach to processing and analyzing a dataset of shoe images. Initially, the environment is set up by loading necessary libraries and setting global chunk options for consistent output. The `list.files` function is used with `full.names = TRUE` to directly obtain the full path of each image, simplifying subsequent file reading operations.
+- In this analysis, we demonstrate a comprehensive approach to processing and analyzing a dataset of shoe images. Initially, we set up the environment by loading necessary libraries and setting global chunk options for consistent output. We utilize the `list.files` function with `full.names = TRUE` to directly obtain the full path of each image, simplifying subsequent file reading operations.
 
-In the "View Shoes" section, a function is defined to plot images from their paths. This function streamlines the visualization process in later stages.
+- In the "View Shoes" section, we define a function to plot images from their paths, streamlining the visualization process in later stages.
 
-The "Load Data" section involves resizing images to a standard dimension, which is crucial for analysis consistency and reducing computational load. The use of `EBImage::resize` within a loop ensures that all images are uniformly processed.
+- The "Load Data" section involves resizing images to a standard dimension, crucial for analysis consistency and reducing computational load. Employing `EBImage::resize` within a loop ensures that all images are uniformly processed.
 
-Displaying a subset of images allows for a visual check of the preprocessing steps, ensuring images are correctly loaded and resized.
+- Displaying a subset of images allows for a visual check of the preprocessing steps, ensuring that images are correctly loaded and resized.
 
-Principal Component Analysis (PCA) is a critical step in understanding the underlying patterns in the dataset. By transforming the image data into a set of principal components, this method highlights the major sources of variation among the images, which is particularly useful in identifying distinguishing features of the shoes.
+- Principal Component Analysis (PCA) is a critical step in understanding the underlying patterns in the dataset. By transforming the image data into a set of principal components, this method highlights the major sources of variation among the images, which is particularly useful in identifying distinguishing features of the shoes.
 
-Finally, visualizing the principal components as "Eigenshoes" provides intuitive insights into the most significant patterns captured by PCA. This can include aspects like shape, color distribution, and design features that differentiate the shoes in the dataset.
+- Finally, visualizing the principal components as "Eigenshoes" provides intuitive insights into the most significant patterns captured by PCA. This includes aspects like shape, color distribution, and design features that differentiate the shoes in the dataset.
 
-Overall, this analysis efficiently handles image data, from preprocessing to advanced analysis, providing valuable insights into the dataset's underlying structure.
+- Overall, our analysis efficiently handles image data, from preprocessing to advanced analysis, providing valuable insights into the dataset's underlying structure.
