@@ -17,14 +17,15 @@ library(doParallel)
 library(foreach)
 library(jpeg)
 library(EBImage)
-# Set the path to your images
+
 image_path <- "/Users/haigbedros/Desktop/MSDS/Spring 24/605/HW/HW4/Eigenimagery-Variability-Analysis/jpg"
 files <- list.files(path=image_path, pattern="\\.jpg", full.names = TRUE)
 ```
 
 ## View Shoes
 
-Adjustment parameters are set to standardize image sizes for analysis. A function to plot images from their paths is defined.
+Adjustment parameters are set to standardize image sizes for analysis. 
+A function to plot images from their paths is defined.
 
 ```{r view-shoes}
 height <- 1200
@@ -66,6 +67,8 @@ A subset of images is displayed to verify the loading and resizing process.
 
 ```{r display-images}
 par(mfrow=c(3, 3), mai=c(.3, .3, .3, .3))
+
+# I adjusted the loop to have a dynamic range, ensuring it adapts to the actual number of available images, and combined the par settings for efficiency and conciseness.
 for (i in 1:min(length(files), dim(im)[1])) { 
   plot_jpeg(writeJPEG(im[i, , , ]))
 }
@@ -90,6 +93,8 @@ Principal components are visualized as 'Eigenshoes', representing major variatio
 mypca2 <- t(mypca$scores)
 dim(mypca2) <- c(length(files), height / scale, width / scale, 3)
 par(mfrow=c(5, 5), mai=c(.001, .001, .001, .001))
+
+# I adjusted the loop to have a dynamic range, ensuring it adapts to the actual number of available images, and combined the par settings for efficiency and conciseness.
 for (i in 1:min(length(files), dim(mypca2)[1])) {  
   plot_jpeg(writeJPEG(mypca2[i, , , ], quality=1, bg="white"))
 }
