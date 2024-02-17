@@ -1,0 +1,112 @@
+---
+title: "DATA 605 - Assignment 4"
+author: "Haig Bedros"
+date: "2024-02-16"
+output: html_document
+---
+
+# Shoe Image Analysis
+
+This analysis involves loading, processing, and analyzing a collection of shoe images to understand patterns and variations.
+
+## Set Up Environment
+
+```{r setup, echo=TRUE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(doParallel)
+library(foreach)
+library(jpeg)
+library(EBImage)
+# Set the path to your images
+image_path <- "/Users/haigbedros/Desktop/MSDS/Spring 24/605/HW/HW4/Eigenimagery-Variability-Analysis/jpg"
+files <- list.files(path=image_path, pattern="\\.jpg", full.names = TRUE)
+```
+
+## View Shoes
+
+Adjustment parameters are set to standardize image sizes for analysis. A function to plot images from their paths is defined.
+
+```{r view-shoes}
+height <- 1200
+width <- 2500
+scale <- 20
+
+plot_jpeg <- function(path, add=FALSE) {
+  jpg <- readJPEG(path, native=TRUE)
+  res <- dim(jpg)[2:1]
+  if (!add) {
+    plot(1, 1, xlim=c(1, res[1]), ylim=c(1, res[2]), 
+         asp=1, 
+         type='n', 
+         xaxt='n', yaxt='n', 
+         xlab='', ylab='', 
+         bty='n')
+  }
+  rasterImage(jpg, 1, 1, res[1], res[2])
+}
+```
+
+## Load Data
+
+Images are loaded, resized, and stored in an array for further analysis.
+
+```{r load-data}
+im <- array(rep(0, length(files) * height / scale * width / scale * 3), 
+            dim=c(length(files), height / scale, width / scale, 3))
+
+for (i in seq_along(files)) {
+  temp <- EBImage::resize(readJPEG(files[i]), height / scale, width / scale)
+  im[i, , , ] <- array(temp, dim=c(1, height / scale, width / scale, 3))
+}
+```
+
+## Display Images
+
+A subset of images is displayed to verify the loading and resizing process.
+
+```{r display-images}
+par(mfrow=c(3, 3), mai=c(.3, .3, .3, .3))
+for (i in 1:min(length(files), dim(im)[1])) { 
+  plot_jpeg(writeJPEG(im[i, , , ]))
+}
+```
+
+## Principal Component Analysis
+
+PCA is performed to identify major patterns in the image data, reducing dimensionality.
+
+```{r pca}
+newdata <- im
+dim(newdata) <- c(length(files), height * width * 3 / scale^2)
+mypca <- princomp(t(as.matrix(newdata)), scores=TRUE, cor=TRUE)
+mycomponents <- mypca$sdev^2 / sum(mypca$sdev^2)
+```
+
+## Eigenshoes
+
+Principal components are visualized as 'Eigenshoes', representing major variation patterns.
+
+```{r eigenshoes}
+mypca2 <- t(mypca$scores)
+dim(mypca2) <- c(length(files), height / scale, width / scale, 3)
+par(mfrow=c(5, 5), mai=c(.001, .001, .001, .001))
+for (i in 1:min(length(files), dim(mypca2)[1])) {  
+  plot_jpeg(writeJPEG(mypca2[i, , , ], quality=1, bg="white"))
+}
+```
+
+### Discussion
+
+This analysis demonstrates a comprehensive approach to processing and analyzing a dataset of shoe images. Initially, the environment is set up by loading necessary libraries and setting global chunk options for consistent output. The `list.files` function is used with `full.names = TRUE` to directly obtain the full path of each image, simplifying subsequent file reading operations.
+
+In the "View Shoes" section, a function is defined to plot images from their paths. This function streamlines the visualization process in later stages.
+
+The "Load Data" section involves resizing images to a standard dimension, which is crucial for analysis consistency and reducing computational load. The use of `EBImage::resize` within a loop ensures that all images are uniformly processed.
+
+Displaying a subset of images allows for a visual check of the preprocessing steps, ensuring images are correctly loaded and resized.
+
+Principal Component Analysis (PCA) is a critical step in understanding the underlying patterns in the dataset. By transforming the image data into a set of principal components, this method highlights the major sources of variation among the images, which is particularly useful in identifying distinguishing features of the shoes.
+
+Finally, visualizing the principal components as "Eigenshoes" provides intuitive insights into the most significant patterns captured by PCA. This can include aspects like shape, color distribution, and design features that differentiate the shoes in the dataset.
+
+Overall, this analysis efficiently handles image data, from preprocessing to advanced analysis, providing valuable insights into the dataset's underlying structure.
